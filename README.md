@@ -1,4 +1,4 @@
- Here's a simple README file template for your React Native calculator app:
+React Native calculator app:
 
 ---
 
