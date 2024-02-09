@@ -1,12 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useState } from 'react';
+import type { PropsWithChildren } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,102 +9,75 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import Row from './src/components/Row';
+import Button from './src/components/Button';
+import calculator, { initialState } from './src/util/calculator';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
+function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const [state, setState] = useState(initialState);
+
+  const handleTap = (type, value) => {
+    setState((prevState) => calculator(type, value, prevState));
+  };
+
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView>
+        <Text style={styles.value}>
+          {parseFloat(state.currentValue).toLocaleString()}
+        </Text>
+        <Row>
+          <Button text="C" theme="secondary" onPress={() => handleTap('clear')} />
+          <Button text="+/-" theme="secondary" onPress={() => handleTap('posneg')} />
+          <Button text="%" theme="secondary" onPress={() => handleTap('percentage')} />
+          <Button text="/" theme="accent" onPress={() => handleTap('operator', '/')} />
+        </Row>
+
+        <Row>
+          <Button text="7" onPress={() => handleTap('number', 7)} />
+          <Button text="8" onPress={() => handleTap('number', 8)} />
+          <Button text="9" onPress={() => handleTap('number', 9)} />
+          <Button text="x" theme="accent" onPress={() => handleTap('operator', '*')} />
+        </Row>
+
+        <Row>
+          <Button text="4" onPress={() => handleTap('number', 4)} />
+          <Button text="5" onPress={() => handleTap('number', 5)} />
+          <Button text="6" onPress={() => handleTap('number', 6)} />
+          <Button text="-" theme="accent" onPress={() => handleTap('operator', '-')} />
+        </Row>
+
+        <Row>
+          <Button text="1" onPress={() => handleTap('number', 1)} />
+          <Button text="2" onPress={() => handleTap('number', 2)} />
+          <Button text="3" onPress={() => handleTap('number', 3)} />
+          <Button text="+" theme="accent" onPress={() => handleTap('operator', '+')} />
+        </Row>
+
+        <Row>
+          <Button text="0" size="double" onPress={() => handleTap('number', 0)} />
+          <Button text="." onPress={() => handleTap('number', '.')} />
+          <Button text="=" theme="accent" onPress={() => handleTap('equal')} />
+        </Row>
+      </SafeAreaView>
     </View>
   );
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: '#202020',
+    justifyContent: 'flex-end',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  value: {
+    color: '#fff',
+    fontSize: 40,
+    textAlign: 'right',
+    marginRight: 20,
+    marginBottom: 10,
   },
 });
 
